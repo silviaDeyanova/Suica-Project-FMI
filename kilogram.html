@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Килограм</title>
+
+    <!--зареждане на библиотеката СУИКА, стиловете и иконката-->
+    <script src="suica.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styleProizvodni.css">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <!--основен код-->
+    <script>
+        //основна функция, която създава обектите, при зареждане на страницата
+        function main() {
+            p = new Suica();
+
+            //създаване на теглилка
+            c = cylinder([0, 0, -20], 15, 30).custom({
+                color: [0.5, 0.5, 0.5],
+                interactive: true
+            });
+            s = sphere([0, 0, 17], 7).custom({
+                color: [0.5, 0.5, 0.5],
+                interactive: true
+            });
+
+            //създаване слушател на събития от мишката
+            p.gl.canvas.addEventListener('mousemove', change, false);
+        }
+
+        counter = 0;
+
+        function change() {
+            //обектът, който в момента ще бъде променян
+            var object = p.objectAtPoint(event.clientX, event.clientY);
+            if (object) {
+                p.nextFrame = small;
+                document.getElementById('description').innerHTML = "Грам";
+            }
+        }
+
+        //промяна на обекта
+        function small() {
+            if (c.radius > 2) {
+                c.radius -= 0.3;
+            }
+            if (s.radius > 1) {
+                s.radius -= 0.15;
+            }
+            if (c.height > 3) {
+                c.height -= 0.6;
+            }
+            s.center[2] = c.center[2] + c.height + s.radius;
+        }
+    </script>
+
+</head>
+
+<body onload="main()">
+    <h2>&ast; Килограм &ast;</h2>
+
+    <!--пояснения за мерната единица-->
+    <p>
+        Килограм е една от основните мерни единици в Международната система единици <b>SI</b> и се използва за физичната величина маса. Символът, с който се означава, е <b>kg</b>. Производна мерна единица на килограма е грама (10<sup>-3</sup>kg).
+    </p>
+
+    <p>
+        <i>Указания за микроиграта</i>: Преместете мишката върху теглилката, за да я смалите. По този начин ще конструирате единицата грам.
+    </p>
+
+    <!--рисувателно поле-->
+    <canvas width="590" height="350">
+    </canvas>
+    <p id="description">Килограм</p>
+
+    <!--бутон за връщане към главната страница-->
+    <a href="project.html" id="back">&#8882</a>
+
+    <div> Източник на лого: <a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank"><i><b>Wikipedia</b></i></a></div>
+</body>
+
+</html>

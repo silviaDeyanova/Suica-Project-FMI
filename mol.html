@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мол</title>
+
+    <!--зареждане на библиотеката СУИКА, стиловете и иконката-->
+    <script src="suica.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styleProizvodni.css">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <!--основен код-->
+    <script>
+        //основна функция, която създава обектите, при зареждане на страницата
+        function main() {
+            p = new Suica();
+
+            //създаване на бехеровата чаша
+            bottom = cylinder([0, 0, -15], 10.01, 10).custom({
+                color: [0, 0, 1],
+                interactive: true
+            });
+            top = cylinder([0, 0, -5], 10, 19).custom({
+                color: [1, 1, 1],
+                interactive: true
+            });
+
+            //създаване на скалата
+            segment([10, 0, -14], [10, 0, 12]).custom({
+                color: [0, 0, 0]
+            });
+
+            //създаване деленията на скалата
+            for (var i = 1; i < 7; i++) {
+                point([10.1, 0, -15 + 4 * i]).custom({
+                    color: [0, 0, 0],
+                    pointSize: 5
+                });
+            }
+
+            //променлива, която ще се увеличава, за да промени цвета
+            d = 0;
+
+            //създаване слушател на събития от мишката
+            p.gl.canvas.addEventListener('mousedown', change, false);
+        }
+
+        //обектът, който в момента ще бъде променян
+        var object = null;
+
+        //запомняне кой е обекта
+        function change(event) {
+            object = p.objectAtPoint(event.clientX, event.clientY);
+            if (object) {
+                p.nextFrame = fill;
+            }
+        }
+
+        //промяна на обекта
+        function fill() {
+            if (bottom.height < 19) {
+                bottom.height += 0.1;
+            }
+            if (d < 0.8) {
+                bottom.color = [d, d, 1];
+                d += 0.01;
+            }
+        }
+    </script>
+
+</head>
+
+<body onload="main()">
+    <h2>&ast; Мол &ast;</h2>
+
+    <!--пояснения за мерната единица-->
+    <p>
+        Мол (означава се с <b>mol</b>) е една от седемте основни единици на <b>SI</b>. Чрез нея се измерва количеството вещество. Нейна производна единица е микромолът (10<sup>-6</sup>mol).
+    </p>
+    <p>
+        <i>Указания за микроиграта</i>: С кликане на левия бутон върху бехеровата чаша ще конструирате по-горе споменатата производна единица, получена след разреждане на разтвора.
+    </p>
+
+    <!--рисувателно поле-->
+    <canvas width="590" height="350">
+    </canvas>
+
+    <!--бутон за връщане към главната страница-->
+    <a href="project.html" id="back">&#8882</a>
+
+    <div> Източник на лого: <a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank"><i><b>Wikipedia</b></i></a></div>
+</body>
+
+</html>

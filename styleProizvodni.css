@@ -1,0 +1,64 @@
+body {
+    text-align: justify;
+    font-family: 'Times New Roman';
+    color: indigo;
+    background-color: lightblue;
+    width: 600px;
+    margin: auto;
+}
+
+h2 {
+    text-shadow: 0 0 4px rgb(114, 112, 216);
+    text-align: center;
+}
+
+canvas {
+    display: block;
+    border: ridge 3px indigo;
+    background-color: White;
+    margin-bottom: 30px;
+}
+
+#description {
+    font-size: 25px;
+    font-style: italic;
+    margin-bottom: 50px;
+}
+
+#back,
+#back:link,
+#back:visited {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid rgb(113, 206, 243);
+    background-color: rgb(113, 206, 243);
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 40px;
+    color: white;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    margin-bottom: 50px;
+}
+
+#back:hover {
+    background-color: rgb(73, 250, 167);
+}
+
+a,
+a:visited {
+    text-decoration: none;
+    color: indigo;
+}
+
+a:hover {
+    background-color: rgb(170, 170, 219);
+}
+
+div {
+    font-size: 14px;
+    position: relative;
+    left: 200px;
+    margin-bottom: 30px;
+}

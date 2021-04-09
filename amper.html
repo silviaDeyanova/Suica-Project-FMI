@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ампер</title>
+
+    <!--зареждане на библиотеката СУИКА, стиловете и иконката-->
+    <script src="suica.min.js"></script>
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="styleProizvodni.css">
+
+    <!--основен код-->
+    <script>
+        //основна функция, която създава обектите, при зареждане на страницата
+        function main() {
+            p = new Suica();
+
+            //създаване на рисувателно поле с проекция и гледна точка
+            orthographic(-1000, 1000);
+            lookAt([0, 0, 100], [0, 0, 0], [0, 1, 0]);
+
+            //създаване на тялото на амперметъра от паралелепипед
+            cuboid([0, 0, 0], [300, 250, 10]).custom({
+                color: [0, 0, 0]
+            });
+            rectangle([0, 11, 11], [270, 190]).custom({
+                color: [1, 1, 1]
+            });
+
+            //създаване на стрелката на амперметъра
+            start = point([141 * Math.cos(radians(135)), -100 + 141 * Math.sin(radians(135)), 12]).
+            custom({
+                color: [0, 0, 0],
+                interactive: true,
+                pointSize: 10
+            });
+            end = point([0, -100, 12]).custom({
+                color: [0, 0, 0]
+            });
+
+            s = segment(end.center, start.center).custom({
+                color: [0, 0, 0]
+            });
+            circle([0, -100, 12], 20).custom({
+                color: [0, 0, 0]
+            });
+
+            //създаване на буквата "А"
+            segment([0, 14, 12], [-15, -25, 12]).custom({
+                color: [0, 0, 0]
+            });
+            segment([0, 14, 12], [15, -25, 12]).custom({
+                color: [0, 0, 0]
+            });
+            segment([-7.5, -5.5, 12], [7.5, -5.5, 12]).custom({
+                color: [0, 0, 0]
+            });
+
+            //създаване на деленията на скалата
+            alpha = 135;
+            for (var i = 0; i < 19; ++i) {
+                point([160 * Math.cos(radians(alpha)), -100 + 160 * Math.sin(radians(alpha)), 12]).
+                custom({
+                    color: [0, 0, 0]
+                });
+                alpha -= 5;
+            }
+
+            //създаване слушатели на събития от мишката
+            p.gl.canvas.addEventListener('mousedown', mouseDown);
+            p.gl.canvas.addEventListener('mousemove', mouseMove);
+            p.gl.canvas.addEventListener('mouseup', mouseUp);
+
+        }
+        //обектът, който в момента ще бъде влачен
+        var obj = null;
+
+        //запомняне кой е обекта
+        function mouseDown(event) {
+            obj = p.objectAtPoint(event.clientX, event.clientY);
+        }
+
+        //пускане на бутона
+        function mouseUp(event) {
+            obj = null;
+        }
+
+        //обработване влачене на върха стрелката, ако е натиснат бутона на мишката върху него
+        function mouseMove(event) {
+            if (obj) {
+                var x = event.clientX - event.target.offsetLeft - event.target.offsetWidth / 2;
+                var y = -(event.clientY - event.target.offsetTop - event.target.offsetHeight / 2);
+                var d = Math.sqrt(x * x + y * y);
+
+                //проверки за позицията на върха на стрелката
+                if (141 * x / d < -100 && -100 + 141 * y / d < 0) {
+                    obj.center[0] = -100;
+                    obj.center[1] = 0;
+                } else if (141 * x / d > 100 && -100 + 141 * y / d < 0) {
+                    obj.center[0] = 100;
+                    obj.center[1] = 0;
+                } else if (141 * x / d <= 100 && 141 * x / d >= -100 && -100 + 141 * y / d >= 0) {
+                    obj.center[0] = 141 * x / d;
+                    obj.center[1] = -100 + 141 * y / d;
+                }
+            }
+        }
+    </script>
+</head>
+
+<body onload="main()">
+    <h2>&ast; Ампер &ast;</h2>
+
+    <!--пояснения за мерната единица-->
+    <p>
+        Ампер е мерна единица за силата на електрическия ток, една от седемте основни мерни единици в системата <b>SI</b>. Нейното международното означение е със символа <b>A</b>. Подразделения на ампера са декаампер (10<sup>1</sup>A), хектоампер (10<sup>2</sup>A),
+        килоампер (10<sup>3</sup>A), мегаампер (10<sup>6</sup>A), гигаампер (10<sup>9</sup>A), тераампер (10<sup>12</sup>A), петаампер (10<sup>15</sup>A), ексаампер (10<sup>18</sup>A).
+    </p>
+
+    <p>
+        <i>Указания за микроиграта</i>: Чрез левия бутон на мишката хванете върха на стрелката на амперметъра и я преместете на друго деление от скалата. Всяко деление отговаря на степен на 10. Първото деление е нулева степен, а всяко - следващо с 1 по-голяма.
+    </p>
+
+    <!--рисувателно поле-->
+    <canvas width="590" height="350">
+    </canvas>
+
+    <!--бутон за връщане към главната страница-->
+    <a href="project.html" id="back">&#8882</a>
+
+    <div> Източник на лого: <a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank"><i><b>Wikipedia</b></i></a></div>
+</body>
+
+</html>

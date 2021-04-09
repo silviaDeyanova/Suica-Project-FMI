@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Секунда</title>
+
+    <!--зареждане на библиотеката СУИКА, стиловете и иконката-->
+    <script src="suica.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styleProizvodni.css">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <!--основен код-->
+    <script>
+        //основна функция, която създава обектите, при зареждане на страницата
+        function main() {
+            p = new Suica();
+
+            //създаване на рисувателно поле с проекция и гледна точка
+            orthographic(-1000, 1000);
+            lookAt([0, 0, 100], [0, 0, 0], [0, 1, 0]);
+
+            //създаване на часовника и циферблата му
+            cylinder([0, 0, 0], 110, 10);
+            circle([0, 0, 11], 90).custom({
+                color: [1, 1, 1],
+                interactive: true
+            });
+            middle = point([0, 0, 12]).custom({
+                color: [0, 0, 0],
+                pointSize: 8
+            });
+            point([0, 84, 12]).custom({
+                color: [0, 0, 0],
+                pointSize: 9
+            });
+            point([0, -84, 12]).custom({
+                color: [0, 0, 0],
+                pointSize: 9
+            });
+            point([84, 0, 12]).custom({
+                color: [0, 0, 0],
+                pointSize: 9
+            });
+            point([-84, 0, 12]).custom({
+                color: [0, 0, 0],
+                pointSize: 9
+            });
+
+            //началните ъгли на стрелките
+            alpha = 90;
+            beta = 90;
+            gama = 90;
+
+            //върховете на стрелките
+            ps = point([80 * Math.cos(radians(alpha)), 80 * Math.sin(radians(alpha)), 12]).custom({
+                color: [0, 0, 0],
+                interactive: true
+            });
+            pm = point([60 * Math.cos(radians(beta)), 60 * Math.sin(radians(beta)), 12]).custom({
+                color: [0, 0, 0],
+                interactive: true
+            });
+            ph = point([40 * Math.cos(radians(gama)), 40 * Math.sin(radians(gama)), 12]).custom({
+                color: [0, 0, 0],
+                interactive: true
+            });
+
+            //създаване на стрелките
+            s = segment(middle.center, ps.center).custom({
+                color: [0, 0, 0],
+                interactive: true
+            });
+            m = segment(middle.center, pm.center).custom({
+                color: [0, 0, 0]
+            });
+            h = segment(middle.center, ph.center).custom({
+                color: [0, 0, 0]
+            });
+
+            //създаване слушатели на събития от мишката
+            p.gl.canvas.addEventListener('mousedown', move, false);
+            p.gl.canvas.addEventListener('dblclick', stop);
+        }
+
+        //обектът, който в момента ще бъде променян
+        var object = null;
+
+        //запомняне кой е обекта
+        function move(event) {
+            object = p.objectAtPoint(event.clientX, event.clientY);
+            if (object) {
+                p.nextFrame = change;
+            }
+        }
+
+        //въртене на стрелките
+        function change() {
+            ps.center = [80 * Math.cos(radians(alpha)), 80 * Math.sin(radians(alpha)), 12];
+            alpha -= 7.2;
+            s.to = ps.center;
+            pm.center = [60 * Math.cos(radians(beta)), 60 * Math.sin(radians(beta)), 12];
+            beta -= 0.12;
+            m.to = pm.center;
+            ph.center = [40 * Math.cos(radians(gama)), 40 * Math.sin(radians(gama)), 12];
+            gama -= 0.01;
+            h.to = ph.center;
+        }
+
+        //запомняне кой е обекта
+        function stop(event) {
+            object = p.objectAtPoint(event.clientX, event.clientY);
+            if (object) {
+                p.nextFrame = stopped;
+            }
+        }
+
+        //спиране въртенето на стрелките
+        function stopped() {
+            ps.center = [80 * Math.cos(radians(alpha)), 80 * Math.sin(radians(alpha)), 12];
+            s.to = ps.center;
+            pm.center = [60 * Math.cos(radians(beta)), 60 * Math.sin(radians(beta)), 12];
+            m.to = pm.center;
+            ph.center = [40 * Math.cos(radians(gama)), 40 * Math.sin(radians(gama)), 12];
+            h.to = ph.center;
+        }
+    </script>
+
+</head>
+
+<body onload="main()">
+    <h2>&ast; Секунда &ast;</h2>
+
+    <!--бутон за връщане към главната страница-->
+    <a href="project.html" id="back">&#8882</a>
+
+    <!--пояснения за мерната единица-->
+    <p>
+        Секундата е единица за време, означена със символа <b>s</b>. Представлява една от седемте основни единици в <b>SI</b> (Международната система единици). Производни единици на секундата са минута (60s) и час (3600s).
+    </p>
+    <p>
+        <i>Указания за микроиграта</i>: С кликване на ляв бутон на мишката върху циферблата на часовника се задвижват стрелките. С двойно кликване на левия бутон на мишката часовникът спира.
+    </p>
+
+    <!--рисувателно поле-->
+    <canvas width="590" height="350">
+    </canvas>
+
+    <div> Източник на лого: <a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank"><i><b>Wikipedia</b></i></a></div>
+</body>
+
+</html>

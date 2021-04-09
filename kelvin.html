@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Келвин</title>
+
+    <!--зареждане на библиотеката СУИКА, стиловете и иконката-->
+    <script src="suica.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styleProizvodni.css">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+
+    <!--основен код-->
+    <script>
+        //основна функция, която създава обектите, при зареждане на страницата
+        function main() {
+            p = new Suica();
+
+            //създаване на термометър
+            sphere([0, 0, -15], 4).custom({
+                color: [1, 0, 0],
+                interactive: true
+            });
+            bottom = cylinder([0, 0, -14], 4.01, 31).custom({
+                color: [1, 0, 0],
+                interactive: true
+            });
+            cylinder([0, 0, -14], 4, 34).custom({
+                color: [1, 1, 1]
+            });
+
+            //създаване на скала с деления
+            segment([9, 3, -11], [9, 3, 18]).custom({
+                color: [0, 0, 0]
+            });
+
+            for (var i = 0; i < 8; i++) {
+                point([9, 3, -11 + 4 * i]).custom({
+                    color: [0, 0, 0],
+                    pointSize: 5
+                });
+            }
+
+            //създаване слушател на събития от мишката
+            p.gl.canvas.addEventListener('mousedown', change, false);
+        }
+        //обектът, който в момента ще бъде променян
+        var object = null;
+
+        //запомняне кой е обекта
+        function change(event) {
+            object = p.objectAtPoint(event.clientX, event.clientY);
+            if (object) {
+                p.nextFrame = fill;
+                document.getElementById('description').innerHTML = "Миликелвин";
+            }
+        }
+
+        //промяна на обекта
+        function fill() {
+            if (bottom.height > 0.031) {
+                bottom.height -= 0.1;
+            }
+        }
+    </script>
+
+</head>
+
+<body onload="main()">
+    <h2>&ast; Келвин &ast;</h2>
+
+    <!--пояснения за мерната единица-->
+    <p>
+        Келвинът (означава се с <b>K</b>) е единица за температура, една от седемте основни в Международната система единици <b>SI</b>. <br>Нейна производна единица е миликелвинът (10<sup>-3</sup>K).</br>
+    </p>
+    <p>
+        <i>Указания за микроиграта</i>: С кликане левия бутон на мишката върху резервоарчето на термометъра конструирате миликелвин.
+    </p>
+
+    <!--рисувателно поле-->
+    <canvas width="590" height="350">
+    </canvas>
+    <p id="description">Келвин</p>
+
+    <!--бутон за връщане към главната страница-->
+    <a href="project.html" id="back">&#8882</a>
+
+    <div> Източник на лого: <a href="https://en.wikipedia.org/wiki/International_System_of_Units" target="_blank"><i><b>Wikipedia</b></i></a></div>
+</body>
+
+</html>
